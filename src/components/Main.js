@@ -12,21 +12,17 @@ function Main(props) {
 
     // Effect hook for updating of user info and cards
     React.useEffect(() => {
-        api.getUserInfo()
-            .then((res) => {
-                setUserName(res.name);
-                setUserDescription(res.about);
-                setUserAvatar(res.avatar);
-            })
-            .catch((err) => {console.log(err)});
+        const userInfoPromise = api.getUserInfo();
+        const initialCardsPromise = api.getInitialCards();
+        Promise.all([userInfoPromise, initialCardsPromise]).then((res) => {
+            console.log(res);
+            setUserName(res[0].name);
+            setUserDescription(res[0].about);
+            setUserAvatar(res[0].avatar);
+            setCards(res[1]);
+        });
 
-        api.getInitialCards()
-            .then((res) => {
-                setCards(res);
-            })
-            .catch((err) => {console.log(err)});
-
-    }, [userName, userDescription, userAvatar, cards])
+    }, []);
 
     return (
         <main className="content">

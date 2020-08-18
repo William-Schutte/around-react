@@ -1,5 +1,6 @@
 # Project 10-11: Around The U.S.
-## William Schutte, 2020
+## William Schutte
+## August 2020
 Practicum by Yandex
 -----
 ### Overview
@@ -27,3 +28,13 @@ Internally, the site is designed under BEM methodology.
 -----
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+
+## Revisions:
+
+### First Review: 8/18/20
+* Destructured objects passed to ImagePopup component to make variable name more clear/easier to read
+* Added dynamic alt attribute in ImagePopup
+* Replaced ternary operator with && operator for picture title element
+* Converted multiple promises (API calls in Main) into a single Promise.all()
+* Fixed effect for API request to only run once upon mounting (passed empty array as second arg)
