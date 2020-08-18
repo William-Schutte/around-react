@@ -3,6 +3,8 @@
 ## August 2020
 Practicum by Yandex
 -----
+[View this project here!](https://william-schutte.github.io/around-react/)
+
 ### Overview
 This project represents work from the 10th and 11th projects for the web-dev course. These projects involved converting my JS/CSS/HTML 
 project page into a React page using the Create React App.
@@ -26,6 +28,7 @@ Internally, the site is designed under BEM methodology.
 * Figma
 
 -----
+
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
