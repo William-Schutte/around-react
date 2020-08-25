@@ -12,6 +12,7 @@ project page into a React page using the Create React App.
 This adaptive page includes form validation, interactive popups, fade-in and fade-out animations, functional like and delete buttons,
 modular JavaScript, and Object Oriented JS design.
 
+    Project 11:
     Project 10: React markup and interface, JSX, functional components, state hooks
 
 ### Techniques

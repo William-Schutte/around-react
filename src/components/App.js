@@ -4,8 +4,21 @@ import Main from './Main.js';
 import Footer from './Footer.js';
 import PopupWithForm from './PopupWithForm.js';
 import ImagePopup from './ImagePopup.js';
+import api from '../utils/api.js';
+import CurrentUserContext from '../contexts/CurrentUserContext.js';
 
 function App() {
+
+    // State variable fot the current user's info
+    const [currentUser, setCurrentUser] = React.useState({});
+    // The effect hook with an empty second parameter will update once upon mounting,
+    // i.e. one update after the API call
+    React.useEffect(() => {
+        api.getUserInfo()
+            .then((res) => {setCurrentUser(res);})
+            .catch((err) => {console.log(err)});
+    }, []);
+
 
     // Declaration of three hooks that act as state variables for the visibility of each form
     const [isEditProfileOpen, setIsEditProfileOpen] = React.useState(false);
@@ -39,7 +52,7 @@ function App() {
     }
 
   return (
-    <>
+    <CurrentUserContext.Provider value={currentUser}>
         {/* Header section */}
         <Header />
         {/* Main content */}
@@ -84,7 +97,7 @@ function App() {
 
         {/* Image Popup */}
         <ImagePopup card={selectedCard} onClose={closeAllPopups} />
-    </>
+    </CurrentUserContext.Provider>
   );
 }
 

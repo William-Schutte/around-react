@@ -1,6 +1,17 @@
 import React from 'react';
+import CurrentUserContext from '../contexts/CurrentUserContext.js';
+
 
 function Card(props) {
+    const currentUser = React.useContext(CurrentUserContext);
+
+    // Code to check if the card is owned by current user and determine the cards visibility
+    const owner = props.card.owner._id === currentUser._id;
+    const cardDeleteButtonClasses = `card__delete-button ${owner ? 'card__delete-button_visible' : 'card__delete-button_hidden'}`;
+
+    // Checks if the card was liked by the current user
+    const isLiked = props.card.likes.some(i => i._id === currentUser._id);
+    const cardLikeButtonClasses = `card__fav-button ${isLiked && 'card__fav-button_active'}`;
     function handleClick() {
         props.onCardClick(props.card);
     }
@@ -8,11 +19,11 @@ function Card(props) {
     return (
         <li className="card">
             <div className="card__image" style={{ backgroundImage: `url(${props.card.link})` }} onClick={handleClick} />
-            <button type="button" aria-label="Card Delete Button" className="card__delete-button"></button>
+            <button type="button" aria-label="Card Delete Button" className={cardDeleteButtonClasses}></button>
             <div className="card__overlay">
                 <h2 className="card__name">{props.card.name}</h2>
                 <div className="card__like-column">
-                    <button type="button" aria-label="Card Favorite Button" className="card__fav-button"></button>
+                    <button type="button" aria-label="Card Favorite Button" className={cardLikeButtonClasses}></button>
                     <p className="card__like-count">{props.card.likes.length}</p>
                 </div>
             </div>
