@@ -6,6 +6,9 @@ import PopupWithForm from './PopupWithForm.js';
 import ImagePopup from './ImagePopup.js';
 import api from '../utils/api.js';
 import CurrentUserContext from '../contexts/CurrentUserContext.js';
+import EditProfilePopup from './EditProfilePopup.js';
+import EditAvatarPopup from './EditAvatarPopup.js';
+import AddPlacePopup from './AddPlacePopup.js';
 
 function App() {
 
@@ -51,54 +54,83 @@ function App() {
         setSelectedCard(card);
     }
 
-  return (
-    <CurrentUserContext.Provider value={currentUser}>
-        {/* Header section */}
-        <Header />
-        {/* Main content */}
-        <Main onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onEditAvatar={handleEditAvatarClick} onCardClick={handleCardClick} onClose={closeAllPopups} />
-        {/* Footer section */}
-        <Footer />
+    function handleUpdateUser(newInfo) {
+        api.patchUserInfo(newInfo)
+            .then((res) => {setCurrentUser(res)})
+            .catch((err) => {console.log(err)});
+    }
 
-        {/* Popup Edit User Info Form */}
-        <PopupWithForm name="form-edit" title="Edit profile" isOpen={isEditProfileOpen} btnText="Save" onClose={closeAllPopups}>
-            <label className="form__input-field">
-                <input id="form-name" name="primary" className="form__name form__input" type="text" placeholder="Name" required minLength="2" maxLength="40" pattern="[A-Za-z -]*" />
-                <span id="form-name-error" className="form__error"></span>
-            </label>
-            <label className="form__input-field">
-                <input id="form-occupation" name="secondary" className="form__occupation form__input secondary" type="text" placeholder="About" required minLength="2" maxLength="200" />
-                <span id="form-occupation-error" className="form__error"></span>
-            </label>
-        </PopupWithForm>
+    function handleUpdateAvatar(avatar) {
+        api.patchUserPic(avatar)
+            .then((res) => {setCurrentUser(res)})
+            .catch((err) => {console.log(err)});
+    }
 
-        {/* Popup Edit User Pic Form */}
-        <PopupWithForm name="form-pic" title="Change userpic" isOpen={isEditAvatarOpen} btnText="Save" onClose={closeAllPopups}>
-            <label className="form__input-field">
-                <input id="form-name" name="primary" className="form__name form__input" type="url" placeholder="Image link" required />
-                <span id="form-name-error" className="form__error"></span>
-            </label>
-        </PopupWithForm>
+    // Card variables and functions
 
-        {/* Popup Add Form */}   
-        <PopupWithForm name="form-add" title="New place" isOpen={isAddPlaceOpen} btnText="Create" onClose={closeAllPopups}>
-            <label className="form__input-field">
-                <input id="form-place" name="primary" className="form__place form__input" type="text" placeholder="Title" required minLength="1" maxLength="30" />
-                <span id="form-place-error" className="form__error"></span>
-            </label>
-            <label className="form__input-field">
-                <input id="form-url" name="secondary" className="form__url form__input" type="url" placeholder="Image link" required />
-                <span id="form-url-error" className="form__error"></span>
-            </label>
-        </PopupWithForm>
+    // Declaration of hooks that act as state variables for cards
+    const [cards, setCards] = React.useState([]);
 
-        {/* Popup Delete Form */}
-        <PopupWithForm name="form-delete" title="Are you sure?" isOpen={null} btnText="Yes" onClose={closeAllPopups} />
+    // Effect hook for updating of user info and cards
+    React.useEffect(() => {
+        api.getInitialCards()
+            .then((res) => {setCards(res);})
+            .catch((err) => {console.log(err)});
+    }, []);
+    
+    function handleCardLike(card) {
+        const isLiked = card.likes.some(i => i._id === currentUser._id);
+        api.likeCard(card, isLiked)
+            .then((res) => {
+                const newCards = cards.map((c) => c._id === card._id ? res : c);
+                setCards(newCards);
+            })
+            .catch((err) => { console.log(err) });
+    }
 
-        {/* Image Popup */}
-        <ImagePopup card={selectedCard} onClose={closeAllPopups} />
-    </CurrentUserContext.Provider>
-  );
+    function handleCardDelete(card) {
+        api.deleteCard(card._id)
+            .then(() => {
+                const newCards = cards.filter((c) => c._id !== card._id);
+                setCards(newCards);
+            });
+    }
+
+    function handleAddPlace(card) {
+        api.addNewCard(card)
+            .then((res) => {
+                const newCards = [...cards, res];
+                setCards(newCards);
+            });
+    }
+    
+    return (
+        <CurrentUserContext.Provider value={currentUser}>
+            {/* Header section */}
+            <Header />
+            {/* Main content */}
+            <Main onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onEditAvatar={handleEditAvatarClick} 
+                onCardClick={handleCardClick} onClose={closeAllPopups} cards={cards} onCardLike={handleCardLike} onCardDelete={handleCardDelete} />
+
+            {/* Footer section */}
+            <Footer />
+
+            {/* Popup Edit User Info Form */}
+            <EditProfilePopup isOpen={isEditProfileOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
+
+            {/* Popup Edit User Pic Form */}
+            <EditAvatarPopup isOpen={isEditAvatarOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
+
+            {/* Popup Add Form */}
+            <AddPlacePopup isOpen={isAddPlaceOpen} onClose={closeAllPopups} onAddPlace={handleAddPlace}/>
+
+            {/* Popup Delete Form */}
+            <PopupWithForm name="form-delete" title="Are you sure?" isOpen={null} btnText="Yes" onClose={closeAllPopups} />
+
+            {/* Image Popup */}
+            <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+        </CurrentUserContext.Provider>
+    );
 }
 
 export default App;

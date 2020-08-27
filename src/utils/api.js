@@ -90,9 +90,9 @@ class Api {
             });
     }
 
-    likeCard(cardData, userId) {
-        
-        if (cardData.likes.some((like) => {return (like._id === userId);})) {
+    likeCard(cardData, isLiked) {
+        // If the card is already liked by the user, the like is removed, else a like is added
+        if (isLiked) {
             return fetch(`${this.options.baseUrl}/cards/likes/${cardData._id}`, {
                 method: "DELETE",
                 headers: this.options.headers,
@@ -119,21 +119,6 @@ class Api {
         }
         
     }
-
-    unlikeCard(cardId) {
-        return fetch(`${this.options.baseUrl}/cards/likes/${cardId}`, {
-            method: "DELETE",
-            headers: this.options.headers,
-        })
-            .then(res => {
-                if (res.ok) {
-                    return res.json();
-                } else {
-                    return Promise.reject(`Error: ${res.status}`);
-                }
-            });
-    }
-
 }
 
 const api = new Api({

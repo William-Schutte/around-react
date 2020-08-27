@@ -1,5 +1,4 @@
 import React from 'react';
-import api from '../utils/api.js';
 import Card from './Card.js';
 import CurrentUserContext from '../contexts/CurrentUserContext.js';
 
@@ -7,16 +6,6 @@ function Main(props) {
 
     // Import of context value from provider
     const currentUser = React.useContext(CurrentUserContext);
-
-    // Declaration of hooks that act as state variables for cards
-    const [cards, setCards] = React.useState([]);
-
-    // Effect hook for updating of user info and cards
-    React.useEffect(() => {
-        api.getInitialCards()
-            .then((res) => {setCards(res);})
-            .catch((err) => {console.log(err)});
-    }, []);
 
     return (
         <main className="content">
@@ -35,8 +24,8 @@ function Main(props) {
             {/* Image cards section, generated from server response */}
             <section className="cards">
                 <ul className="cards__container">
-                    {cards.map(card => (
-                        <Card key={card._id} card={card} onCardClick={props.onCardClick} onClose={props.onClose} />
+                    {props.cards.map(card => (
+                        <Card key={card._id} card={card} onCardClick={props.onCardClick} onCardLike={props.onCardLike} onCardDelete={props.onCardDelete} onClose={props.onClose} />
                     ))}
                 </ul>
             </section>

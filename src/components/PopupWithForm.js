@@ -2,7 +2,7 @@ import React from 'react';
 
 function PopupWithForm(props) {
     return(
-        <form className={`form ${props.name} ${props.isOpen && (`popup-opened`)}`} name={props.name}>
+        <form className={`form ${props.name} ${props.isOpen && (`popup-opened`)}`} name={props.name} onSubmit={props.onSubmit}>
             <div className="form__container">
                 <h2 className="form__title">{props.title}</h2>
                 {props.children}
