@@ -1,6 +1,5 @@
 # Project 10-11: Around The U.S.
-## William Schutte
-## August 2020
+## William Schutte, August 2020
 Practicum by Yandex
 -----
 [View this project here!](https://william-schutte.github.io/around-react/)
@@ -12,7 +11,7 @@ project page into a React page using the Create React App.
 This adaptive page includes form validation, interactive popups, fade-in and fade-out animations, functional like and delete buttons,
 modular JavaScript, and Object Oriented JS design.
 
-    Project 11:
+    Project 11: Global state with React context providers and subscribers, state variables for form input control, and refs
     Project 10: React markup and interface, JSX, functional components, state hooks
 
 ### Techniques
